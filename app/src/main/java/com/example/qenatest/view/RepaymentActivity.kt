@@ -6,9 +6,9 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qenatest.adapters.RepaymentListAdapter
+import com.example.qenatest.data.models.FinancialStatus
 import com.example.qenatest.data.models.LoanHistory
 import com.example.qenatest.databinding.ActivityRepaymentBinding
-import com.example.qenatest.view_model.LoginViewModel
 import com.example.qenatest.view_model.RepaymentViewModel
 
 class RepaymentActivity : AppCompatActivity() {
@@ -27,20 +27,20 @@ class RepaymentActivity : AppCompatActivity() {
 
     private fun addNew() {
         binding.submitBtn.setOnClickListener {
-            viewModel.addNewFinancialHistory(
-                LoanHistory("New",binding.amountEdit.text.toString())
+            viewModel.addItem(
+                FinancialStatus("New",binding.amountEdit.text.toString())
             )
         }
     }
 
     private fun initRecycler() {
-        recyclerView = binding.repaymentRecy
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val mainActivity = this
 
-        val reportList = viewModel.financialStatuses.value ?: emptyList()
-
-        val adapter = RepaymentListAdapter(reportList, this)
-        recyclerView.adapter = adapter
+        viewModel.financialStatuses.observe(this){
+            binding.repaymentRecy.apply {
+                layoutManager = LinearLayoutManager(applicationContext)
+                adapter = RepaymentListAdapter(it, mainActivity)
+            }
+        }
     }
 }

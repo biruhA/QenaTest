@@ -7,25 +7,25 @@ import com.example.qenatest.data.models.FinancialStatus
 import com.example.qenatest.data.models.LoanHistory
 
 class RepaymentViewModel:ViewModel() {
-    private val _financialStatuses = MutableLiveData<List<FinancialStatus>>()
-    val financialStatuses: LiveData<List<FinancialStatus>> get() = _financialStatuses
-
-    private val _financialHistory = MutableLiveData<List<LoanHistory>>()
-    val financialHistory: LiveData<List<FinancialStatus>> get() = _financialStatuses
+    var financialStatuses = MutableLiveData<MutableList<FinancialStatus>>()
+    var financialHistory = MutableLiveData<MutableList<LoanHistory>>()
 
     init {
-        _financialStatuses.value = listOf(
-            FinancialStatus("Good", 10000.0, 12, 24),
-            FinancialStatus("Fair", 5000.0, 6, 12)
-        )
-        _financialHistory.value = listOf(
-            LoanHistory("Good", "10000.0"),
-            LoanHistory("Fair", "5000.0")
-        )
+        financialStatuses.value = mutableListOf()
+        financialHistory.value = mutableListOf()
     }
 
-    fun addNewFinancialHistory(newEntry: LoanHistory) {
-        val currentHistory = _financialHistory.value ?: emptyList()
-        _financialHistory.value = listOf(currentHistory, newEntry)
+    fun addItem(newEntry: FinancialStatus)
+    {
+        val list = financialStatuses.value
+        list!!.add(newEntry)
+        financialStatuses.postValue(list)
+    }
+
+    fun addHistory(newEntry: LoanHistory)
+    {
+        val list = financialHistory.value
+        list!!.add(newEntry)
+        financialHistory.postValue(list)
     }
 }

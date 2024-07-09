@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qenatest.adapters.HistoryAdapter
+import com.example.qenatest.adapters.RepaymentListAdapter
 import com.example.qenatest.databinding.ActivityHistoryBinding
 import com.example.qenatest.view_model.RepaymentViewModel
 
@@ -24,13 +25,13 @@ class HistoryActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        recyclerView = binding.historyRecy
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val mainActivity = this
 
-        val reportList = viewModel.financialHistory.value ?: emptyList()
-
-        val adapter = HistoryAdapter(reportList, this)
-        recyclerView.adapter = adapter
+        viewModel.financialHistory.observe(this){
+            binding.historyRecy.apply {
+                layoutManager = LinearLayoutManager(applicationContext)
+                adapter = HistoryAdapter(it, mainActivity)
+            }
+        }
     }
 }
